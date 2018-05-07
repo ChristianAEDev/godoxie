@@ -1,6 +1,7 @@
 'use strict'
 
 import { app, BrowserWindow } from 'electron'
+import log from 'electron-log'
 
 /**
  * Set `__static` path to static files in production
@@ -16,13 +17,14 @@ const winURL = process.env.NODE_ENV === 'development'
   : `file://${__dirname}/index.html`
 
 function createWindow () {
+  log.info('Starting')
   /**
    * Initial window options
    */
   mainWindow = new BrowserWindow({
-    height: 563,
+    height: 1080,
     useContentSize: true,
-    width: 1000
+    width: 1920
   })
 
   mainWindow.loadURL(winURL)
@@ -32,7 +34,12 @@ function createWindow () {
   })
 }
 
-app.on('ready', createWindow)
+function init () {
+  log.transports.file.level = 'info'
+  createWindow()
+}
+
+app.on('ready', init)
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
