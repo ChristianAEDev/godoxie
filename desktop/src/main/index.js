@@ -18,6 +18,9 @@ const winURL = process.env.NODE_ENV === 'development'
   ? `http://localhost:9080`
   : `file://${__dirname}/index.html`
 
+// Backend
+let go
+
 function createWindow () {
   log.info('Starting')
   /**
@@ -36,26 +39,34 @@ function createWindow () {
   })
 }
 
+function startBackend () {
+  if (process.env.NODE_ENV === 'development') {
+    log.info('Running in DEV mode')
+    log.warn('In DEV mode the backend has to be started manually.')
+  } else {
+    log.info('Running in PROD mode')
+    // Starting the "backend"
+    go = execFile(path.join(__dirname, '../../../scany-server'), (error, stdout, stderr) => {
+      if (error) {
+        throw error
+      }
+      log.info(stdout)
+    })
+  }
+}
+
 function init () {
   // Setting up logging
   log.transports.file.level = 'info'
 
-  log.info(__filename)
-  log.info(path.join(__dirname, '../../scany-server'))
-  // Starting the "backend"
-  execFile(path.join(__dirname, '../../../scany-server'), (error, stdout, stderr) => {
-    if (error) {
-      throw error
-    }
-    log.info(stdout)
-  })
-
+  startBackend()
   createWindow()
 }
 
 app.on('ready', init)
 
 app.on('window-all-closed', () => {
+  go.kill()
   if (process.platform !== 'darwin') {
     app.quit()
   }
