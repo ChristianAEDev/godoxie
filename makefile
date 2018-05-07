@@ -10,11 +10,11 @@ build-linux:
 	# Remove all files in the output folder
 	rm -rfv $(output-linux)/*
 	# Install dependencies
-	cd client && yarn install
-	# Build React fontend
-	cd client && yarn build
+	cd desktop && yarn
+	# Build client fontend
+	cd desktop && yarn run build
 	# Copy the frontend build to the output folder	
-	mv client/dist $(output-linux)
+	mv desktop/build $(output-linux)
 	# Build the Go server
 	cd server && go build -o godoxie
 	# Copy Go server to output directory
