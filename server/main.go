@@ -31,7 +31,7 @@ func main() {
 }
 
 func hello(w http.ResponseWriter, r *http.Request) {
-	message := "Hello World"
+	message := "Hello Vue-World!"
 	response := struct {
 		Message string
 	}{

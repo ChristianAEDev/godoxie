@@ -2,6 +2,8 @@
 
 import { app, BrowserWindow } from 'electron'
 import log from 'electron-log'
+import { execFile } from 'child_process'
+import path from 'path'
 
 /**
  * Set `__static` path to static files in production
@@ -35,7 +37,19 @@ function createWindow () {
 }
 
 function init () {
+  // Setting up logging
   log.transports.file.level = 'info'
+
+  log.info(__filename)
+  log.info(path.join(__dirname, '../../scany-server'))
+  // Starting the "backend"
+  execFile(path.join(__dirname, '../../../scany-server'), (error, stdout, stderr) => {
+    if (error) {
+      throw error
+    }
+    log.info(stdout)
+  })
+
   createWindow()
 }
 
