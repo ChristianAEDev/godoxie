@@ -4,7 +4,8 @@ import axios from 'axios'
 const state = {
   doxieIP: '192.168.100.101',
   status: {},
-  isConnected: false
+  isConnected: false,
+  scans: {}
 }
 
 const getters = {
@@ -25,6 +26,9 @@ const mutations = {
   },
   setConnected (state, payload) {
     state.isConnected = payload
+  },
+  setScans (state, payload) {
+    state.scans = payload
   }
 }
 
@@ -43,6 +47,18 @@ const actions = {
         } else {
           commit('setConnected', false)
         }
+      })
+      .catch(error => {
+        throw error
+      })
+  },
+  requestAllScans ({ commit }) {
+    log.info('GET /scans.json')
+
+    axios
+      .get('http://' + state.doxieIP + '/scans.json')
+      .then(response => {
+        commit('setScans', response.data)
       })
       .catch(error => {
         throw error

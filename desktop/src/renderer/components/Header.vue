@@ -7,6 +7,9 @@
     <v-btn flat @click='requestStatus'>
       Connect
     </v-btn>
+    <v-btn flat @click='requestAllScans'>
+      Refresh
+    </v-btn>
   </v-toolbar>
 </template>
 
@@ -18,7 +21,7 @@ export default {
     ...mapGetters(['doxieIP', 'isConnected'])
   },
   methods: {
-    ...mapActions(['requestStatus'])
+    ...mapActions(['requestStatus', 'requestAllScans'])
   }
 }
 </script>
