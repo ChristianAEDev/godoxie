@@ -1,6 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
+import Header from '@/components/Header'
+import LandingPage from '@/components/LandingPage'
+
 Vue.use(Router)
 
 export default new Router({
@@ -8,7 +11,7 @@ export default new Router({
     {
       path: '/',
       name: 'landing-page',
-      component: require('@/components/LandingPage').default
+      components: { default: LandingPage, header: Header }
     },
     {
       path: '*',
