@@ -5,7 +5,7 @@ const state = {
   doxieIP: '192.168.100.101',
   status: {},
   isConnected: false,
-  scans: {}
+  scans: []
 }
 
 const getters = {
@@ -58,7 +58,14 @@ const actions = {
     axios
       .get('http://' + state.doxieIP + '/scans.json')
       .then(response => {
-        commit('setScans', response.data)
+        let scans = []
+        response.data.forEach(scan => {
+          let startIndex = scan.name.indexOf('_') + 1
+          let endIndex = scan.name.length - 4
+          let filename = scan.name.substring(startIndex, endIndex)
+          scans.push({...scan, filename})
+        })
+        commit('setScans', scans)
       })
       .catch(error => {
         throw error
