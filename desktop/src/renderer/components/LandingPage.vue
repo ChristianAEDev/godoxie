@@ -12,11 +12,8 @@
               </v-card-title>
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn icon>
+                <v-btn icon @click='downloadScan({filename: scan.filename})'>
                   <v-icon>save</v-icon>
-                </v-btn>
-                <v-btn icon>
-                  <v-icon>share</v-icon>
                 </v-btn>
               </v-card-actions>
             </v-card>
@@ -28,12 +25,15 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'landing-page',
   computed: {
     ...mapGetters(['status', 'doxieIP', 'scans'])
+  },
+  methods: {
+    ...mapActions(['downloadScan'])
   }
 }
 </script>

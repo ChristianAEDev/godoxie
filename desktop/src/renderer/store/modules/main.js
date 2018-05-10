@@ -1,5 +1,7 @@
 import log from 'electron-log'
 import axios from 'axios'
+import fs from 'fs'
+const { dialog } = require('electron').remote
 
 const state = {
   doxieIP: '192.168.100.101',
@@ -72,6 +74,41 @@ const actions = {
       })
       .catch(error => {
         throw error
+      })
+  },
+  downloadScan (context, payload) {
+    log.info(payload.filename)
+    let filename = payload.filename + '.pdf'
+    let url = `http://${state.doxieIP}/scans/DOXIE/PDF/IMG_${payload.filename}.PDF`
+
+    log.info(url)
+
+    // Download the PDF
+    axios
+      .get(url, { responseType: 'blob',
+        headers: {
+          'Accept': 'application/pdf'}
+      })
+      .then(response => {
+        log.info('response: ' + response.data)
+        let blob = new Blob([response.data], {type: 'application/pdf'})
+        log.info('blob: ' + blob)
+        dialog.showSaveDialog(
+          {
+            defaultPath: filename,
+            title: 'Save scan...'
+          },
+          path => {
+            log.info(path)
+            fs.writeFileSync(path, response.data)
+            // fs.writeFile(path, blob, error => {
+            //   log.error('Error saving PDF: ' + error)
+            // })
+          }
+        )
+      })
+      .catch(error => {
+        log.error(error)
       })
   }
 }
