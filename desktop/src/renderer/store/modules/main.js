@@ -17,6 +17,9 @@ const getters = {
   },
   isConnected: state => {
     return state.isConnected
+  },
+  scans: state => {
+    return state.scans
   }
 }
 
@@ -63,7 +66,7 @@ const actions = {
           let startIndex = scan.name.indexOf('_') + 1
           let endIndex = scan.name.length - 4
           let filename = scan.name.substring(startIndex, endIndex)
-          scans.push({...scan, filename})
+          scans.push({ ...scan, filename })
         })
         commit('setScans', scans)
       })
