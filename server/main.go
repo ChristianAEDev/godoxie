@@ -3,8 +3,10 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
@@ -12,6 +14,9 @@ import (
 
 func main() {
 	log.Println("Starting...")
+	if err != nil {
+		log.Println(err)
+	}
 
 	router := mux.NewRouter()
 	api := router.PathPrefix("/api/v1").Subrouter()
@@ -28,6 +33,32 @@ func main() {
 	http.ListenAndServe(":"+port,
 		handlers.CORS(handlers.AllowedMethods(methods), handlers.AllowedHeaders(headers))(router))
 
+}
+
+// Download a scan from the scanner and save it as a file
+func DownloadFile(filepath string, url string) error {
+
+	// Create the file
+	out, err := os.Create(filepath)
+	if err != nil {
+		return err
+	}
+	defer out.Close()
+
+	// Get the data
+	resp, err := http.Get(url)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+
+	// Write the body to file
+	_, err = io.Copy(out, resp.Body)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func hello(w http.ResponseWriter, r *http.Request) {
